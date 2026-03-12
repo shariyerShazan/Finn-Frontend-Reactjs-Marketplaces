@@ -2,26 +2,41 @@
 import { useEffect, useMemo, useState } from "react";
 import SearchChatSection from "./_components/SearchChatSection";
 // import Chats from "./_components/Chats";
-import { useGetMyConversationsQuery, useGetOnlineUsersQuery } from "@/redux/fetures/chat/chat.api";
+import {
+  useGetMyConversationsQuery,
+  useGetOnlineUsersQuery,
+} from "@/redux/fetures/chat/chat.api";
 import Chats from "./_components/Chats";
+import { useMarkAllAsReadMutation } from "@/redux/fetures/chat/notification";
 
 
 const UserChat = () => {
   const { data, isLoading } = useGetMyConversationsQuery();
- const [activeChatId, setActiveChatId] = useState<string | null>(() => {
-   return localStorage.getItem("activeChatId");
- });
+  const [activeChatId, setActiveChatId] = useState<string | null>(() => {
+    return localStorage.getItem("activeChatId");
+  });
 
   const { data: onlineData } = useGetOnlineUsersQuery(undefined, {
     pollingInterval: 3000,
   });
+  const [markAllRead] = useMarkAllAsReadMutation();
+  useEffect(() => {
+    const clearNotifications = async () => {
+      try {
+        await markAllRead("en").unwrap();
+      } catch (err) {
+        console.error("Failed to clear notifications:", err);
+      }
+    };
 
+    clearNotifications();
+  }, [markAllRead]);
 
   useEffect(() => {
     if (activeChatId) {
       localStorage.setItem("activeChatId", activeChatId);
     } else {
-      localStorage.removeItem("activeChatId"); 
+      localStorage.removeItem("activeChatId");
     }
   }, [activeChatId]);
 
@@ -53,7 +68,7 @@ const UserChat = () => {
             conversationId={activeChatId}
             activePartner={activeConversation?.participants[0]?.user}
             isBlocked={activeConversation?.isBlocked}
-            isOnline={isPartnerOnline} 
+            isOnline={isPartnerOnline}
           />
         ) : (
           <div className="flex-1 flex items-center justify-center bg-gray-50 text-gray-400">

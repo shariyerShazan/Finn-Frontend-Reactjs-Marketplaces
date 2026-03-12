@@ -2,29 +2,45 @@
 import { useEffect, useMemo, useState } from "react";
 import SearchChatSection from "./_components/SearchChatSection";
 // import Chats from "./_components/Chats";
-import { useGetMyConversationsQuery, useGetOnlineUsersQuery } from "@/redux/fetures/chat/chat.api";
+import {
+  useGetMyConversationsQuery,
+  useGetOnlineUsersQuery,
+} from "@/redux/fetures/chat/chat.api";
 import Chats from "./_components/Chats";
+import { useMarkAllAsReadMutation } from "@/redux/fetures/chat/notification";
+// import { useMarkAllAsReadMutation } from "@/redux/fetures/chat/notification";
 // import { Chats } from "./_components/Chats";
 
-
 const SellerChat = () => {
+
   const { data, isLoading } = useGetMyConversationsQuery();
   const [activeChatId, setActiveChatId] = useState<string | null>(() => {
     return localStorage.getItem("activeChatId");
   });
 
-
   const { data: onlineData } = useGetOnlineUsersQuery(undefined, {
     pollingInterval: 3000,
   });
-
-   useEffect(() => {
-      if (activeChatId) {
-        localStorage.setItem("activeChatId", activeChatId);
-      } else {
-        localStorage.removeItem("activeChatId"); 
+  const [markAllRead] = useMarkAllAsReadMutation();
+  useEffect(() => {
+    const clearNotifications = async () => {
+      try {
+        await markAllRead("en").unwrap();
+      } catch (err) {
+        console.error("Failed to clear notifications:", err);
       }
-    }, [activeChatId]);
+    };
+
+    clearNotifications();
+  }, [markAllRead]);
+
+  useEffect(() => {
+    if (activeChatId) {
+      localStorage.setItem("activeChatId", activeChatId);
+    } else {
+      localStorage.removeItem("activeChatId");
+    }
+  }, [activeChatId]);
 
   const conversations = data?.conversations || [];
   const onlineUsers = onlineData?.users || [];
@@ -67,6 +83,3 @@ const SellerChat = () => {
 };
 
 export default SellerChat;
-
-
-

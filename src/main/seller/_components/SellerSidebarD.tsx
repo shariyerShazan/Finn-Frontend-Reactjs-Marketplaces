@@ -1,32 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
-//   Users,
-//   CreditCard,
-//   ShieldCheck,
   ChevronLeft,
   Settings,
   LogOut,
   Loader2,
 } from "lucide-react";
-// import { MdPayments } from "react-icons/md";
-// import { TbCategory2 } from "react-icons/tb";
-// import { TiFlowChildren } from "react-icons/ti";
 import { IoChatboxOutline, IoPaperPlaneOutline } from "react-icons/io5";
 import { TbDeviceIpadStar } from "react-icons/tb";
 import { useLogoutMutation } from "@/redux/fetures/auth.api";
 import { toast } from "react-toastify";
-
+// import { useGetUnreadCountQuery } from "@/redux/fetures/chat/notification"; // হুকটি ইমপোর্ট করুন
+import { useEffect } from "react";
+import { socketService } from "@/lib/socketService";
+import { useGetUnreadCountQuery } from "@/redux/fetures/chat/notification";
 
 interface SidebarProps {
   isCollapsed: boolean;
   setIsCollapsed: (val: boolean) => void;
   isMobileOpen: boolean;
   setIsMobileOpen: (val: boolean) => void;
-  userData:any
+  userData: any;
 }
 
 const SellerSidebarD = ({
@@ -36,9 +31,19 @@ const SellerSidebarD = ({
   setIsMobileOpen,
   userData,
 }: SidebarProps) => {
+  useEffect(() => {
+    if (userData?.id || localStorage.getItem("userId")) {
+      socketService.connect();
+    }
+  }, [userData]);
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+
+  const { data: countData } = useGetUnreadCountQuery("en");
+  const unreadCount = countData?.data?.count || 0;
+
   const handleLogout = async () => {
     try {
       await logout(undefined).unwrap();
@@ -57,7 +62,12 @@ const SellerSidebarD = ({
       icon: TbDeviceIpadStar,
       path: "/seller/dashboard/all-ads",
     },
-    { name: "chat", icon: IoChatboxOutline, path: "/seller/dashboard/chat" },
+    {
+      name: "chat",
+      icon: IoChatboxOutline,
+      path: "/seller/dashboard/chat",
+      badge: unreadCount > 0 ? unreadCount.toString() : null, // এখানে কাউন্ট সেট করা হলো
+    },
     {
       name: "subscription",
       icon: IoPaperPlaneOutline,
@@ -68,29 +78,6 @@ const SellerSidebarD = ({
       icon: Settings,
       path: "/seller/dashboard/profile",
     },
-    // {
-    //   name: "payments",
-    //   icon: MdPayments,
-    //   path: "/seller/dashboard/payments",
-    //   badge: "12",
-    // },
-    // { name: "Marketplace", icon: ShoppingBag, path: "/admin/ads" },
-    // {
-    //   name: "Transactions",
-    //   icon: CreditCard,
-    //   path: "/admin/dashboard/Transactions",
-    // },
-    // {
-    //   name: "Category",
-    //   icon: TbCategory2,
-    //   path: "/admin/dashboard/category",
-    // },
-    // {
-    //   name: "Sub Category",
-    //   icon: TiFlowChildren,
-    //   path: "/admin/dashboard/sub-category",
-    // },
-    // { name: "Support", icon: MessageSquare, path: "/admin/messages" },
   ];
 
   const activeClass = "bg-[#0064AE] text-white shadow-lg shadow-[#0064AE]/20";
@@ -104,7 +91,6 @@ const SellerSidebarD = ({
       ${isCollapsed ? "lg:w-20" : "lg:w-64"}
     `}
     >
-      {/* Header & Collapse Toggle */}
       <div className="h-16 flex items-center justify-between px-6 border-b border-white/5 bg-[#00152b]">
         {!isCollapsed && (
           <Link to={"/"}>
@@ -131,7 +117,6 @@ const SellerSidebarD = ({
         </button>
       </div>
 
-      {/* Nav Items */}
       <nav className="p-3 space-y-1.5 mt-4">
         {menuItems.map((item: any) => {
           const isActive = pathname === item.path;
@@ -142,21 +127,28 @@ const SellerSidebarD = ({
               onClick={() => setIsMobileOpen(false)}
               className={`flex items-center p-3 rounded-md transition-all group relative ${isActive ? activeClass : inactiveClass}`}
             >
-              <item.icon size={20} className="shrink-0" />
+              <div className="relative">
+                <item.icon size={20} className="shrink-0" />
+                {isCollapsed && item.badge && (
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-[#D55C5E] rounded-full border border-[#001D3D]" />
+                )}
+              </div>
+
               {!isCollapsed && (
                 <span className="ml-3 text-[13px] font-semibold whitespace-nowrap">
                   {item.name}
                 </span>
               )}
+
               {!isCollapsed && item.badge && (
-                <span className="ml-auto bg-[#D55C5E] text-white text-[9px] px-1.5 py-0.5 rounded font-black">
+                <span className="ml-auto bg-[#D55C5E] text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold min-w-[18px] text-center">
                   {item.badge}
                 </span>
               )}
-              {/* Tooltip for Collapsed Mode */}
+
               {isCollapsed && (
                 <div className="absolute left-14 invisible group-hover:visible bg-[#00152b] text-white text-xs px-2 py-1 rounded shadow-xl border border-white/10 z-50 whitespace-nowrap">
-                  {item.name}
+                  {item.name} {item.badge ? `(${item.badge})` : ""}
                 </div>
               )}
             </Link>
@@ -164,22 +156,24 @@ const SellerSidebarD = ({
         })}
       </nav>
 
-      {/* Bottom Profile Area */}
       <div className="mt-auto p-4 border-t border-white/5 bg-[#00152b]">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded bg-slate-700 overflow-hidden shrink-0">
             <img
-              src="https://api.dicebear.com/7.x/initials/svg?seed=SELLER"
-              alt=""
+              src={
+                userData?.profilePicture ||
+                "https://api.dicebear.com/7.x/initials/svg?seed=SELLER"
+              }
+              alt="p"
             />
           </div>
           {!isCollapsed && (
             <div className="overflow-hidden">
               <p className="text-xs font-bold text-white truncate">
-                {userData.nickName}
+                {userData?.nickName}
               </p>
               <p className="text-[10px] text-slate-500 uppercase tracking-tighter">
-                {userData.role}
+                {userData?.role}
               </p>
             </div>
           )}
