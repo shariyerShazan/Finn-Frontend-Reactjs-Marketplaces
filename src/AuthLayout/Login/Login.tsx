@@ -74,7 +74,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] ">
+    <div  className="min-h-[80vh] ">
       <main className="max-w-6xl mx-auto   px-4 grid md:grid-cols-2 gap-8 items-center">
         {/* Left Side: Hero Image */}
         <div className="rounded-3xl overflow-hidden shadow-sm hidden md:block">
@@ -175,8 +175,9 @@ export default function LoginPage() {
 
               <Button
                 disabled={isLoading}
+                translate="no"
                 type="submit"
-                className="w-full bg-[#0064AE] cursor-pointer hover:bg-[#005494] text-white py-7 text-lg font-semibold rounded-2xl transition-all active:scale-[0.98]"
+                className="w-full notranslate bg-[#0064AE] cursor-pointer hover:bg-[#005494] text-white py-7 text-lg font-semibold rounded-2xl transition-all active:scale-[0.98]"
               >
                 {isLoading ? <Loader2 className="animate-spin" /> : "Continue"}
               </Button>

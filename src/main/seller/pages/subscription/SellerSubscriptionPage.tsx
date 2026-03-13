@@ -148,8 +148,10 @@ console.log(historyData);
 
               <button
                 onClick={() => handlePurchase(plan.id)}
+                // className="" // গুগল ট্রান্সলেটরকে ইগনোর করতে বাধ্য করবে
+                translate="no"
                 disabled={isRedirecting}
-                className="w-full cursor-pointer py-3 bg-[#0064AE] text-white font-bold rounded-xl hover:bg-[#004e8a] transition-all flex items-center justify-center gap-2"
+                className="w-full notranslate cursor-pointer py-3 bg-[#0064AE] text-white font-bold rounded-xl hover:bg-[#004e8a] transition-all flex items-center justify-center gap-2"
               >
                 {isRedirecting ? (
                   <Loader2 className="animate-spin" size={18} />
