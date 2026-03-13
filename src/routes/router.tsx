@@ -238,7 +238,9 @@ export const router = createBrowserRouter([
       <PrivateRoute allowedRoles={["SELLER"]}>
         <SellerDashboardLayout />
       </PrivateRoute>
+      
     ),
+    errorElement:<ErrorBoundary/>,
     children: [
       {
         index: true,

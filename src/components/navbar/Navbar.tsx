@@ -11,7 +11,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useGetMeQuery } from "@/redux/fetures/users.api";
-import LanguageDropdownNav from "./LanguageDropdownNav";
+import LanguageDropdown from "../translation/LanguageDropdown";
+
 
 
 
@@ -131,7 +132,8 @@ const Navbar = () => {
        {/* --- Actions --- */}
 <div className="flex items-center gap-3">
   {/* <LanguageDropdown/> */}
-      <LanguageDropdownNav/>
+      {/* <LanguageDropdownNav/> */}
+      <LanguageDropdown/>
   {userData ? (
     <Button onClick={() => dashboardNavigate()} className="bg-black hover:bg-zinc-800 ...">
       <User className="w-4 h-4" /> Dashboard

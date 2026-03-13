@@ -56,6 +56,7 @@ export const baseApi = createApi({
     "SubscriptionPlan",
     "Notification",
     "UnreadCount"
+    
   ],
   endpoints: () => ({}),
 });

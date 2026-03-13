@@ -1,8 +1,8 @@
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: "https://api.zen-buy.com",
-// baseUrl:"http://localhost:3002",
+  // baseUrl: "https://www.zen-buy.com/api",
+baseUrl:"http://localhost:3002",
   credentials: "include",
 });
 

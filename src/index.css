@@ -124,3 +124,82 @@
 /* new added */
 
 
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  top: 0 !important;
+  position: static !important;
+}
+
+.goog-te-gadget {
+  height: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+.goog-logo-link {
+  display: none !important;
+}
+
+.goog-te-balloon-frame {
+  display: none !important;
+}
+
+#goog-gt-tt {
+  display: none !important;
+}
+
+.goog-te-spinner-pos {
+  display: none !important;
+}
+
+.skiptranslate {
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Keep combo select but hide it visually */
+.goog-te-combo {
+  position: absolute !important;
+  left: -9999px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hide iframe visually but keep in DOM */
+.skiptranslate iframe {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
+body > .skiptranslate {
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Google translate container - keep small but visible */
+#google_translate_element {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf-ti6hGc {
+  -webkit-transition-delay: 0s;
+  transition-delay: 0s;
+  left: -14px;
+  top: -14px;
+  display: none !important;
+}
