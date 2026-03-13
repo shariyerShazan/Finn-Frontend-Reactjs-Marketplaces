@@ -1,7 +1,7 @@
-import * as React from "react"
-import { ScrollArea as ScrollAreaPrimitive } from "radix-ui"
+import * as React from "react";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function ScrollArea({
   className,
@@ -11,7 +11,9 @@ function ScrollArea({
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
-      className={cn("relative", className)}
+      // 'notranslate' added to protect the scroll container
+      className={cn("relative notranslate", className)}
+      translate="no"
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
@@ -23,7 +25,7 @@ function ScrollArea({
       <ScrollBar />
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
-  )
+  );
 }
 
 function ScrollBar({
@@ -35,14 +37,16 @@ function ScrollBar({
     <ScrollAreaPrimitive.ScrollAreaScrollbar
       data-slot="scroll-area-scrollbar"
       orientation={orientation}
+      // Added notranslate to the scrollbar to avoid interference
       className={cn(
-        "flex touch-none p-px transition-colors select-none",
+        "flex touch-none p-px transition-colors select-none notranslate",
         orientation === "vertical" &&
           "h-full w-2.5 border-l border-l-transparent",
         orientation === "horizontal" &&
           "h-2.5 flex-col border-t border-t-transparent",
-        className
+        className,
       )}
+      translate="no"
       {...props}
     >
       <ScrollAreaPrimitive.ScrollAreaThumb
@@ -50,7 +54,7 @@ function ScrollBar({
         className="bg-border relative flex-1 rounded-full"
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
-  )
+  );
 }
 
-export { ScrollArea, ScrollBar }
+export { ScrollArea, ScrollBar };

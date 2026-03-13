@@ -33,7 +33,6 @@ const Profile = () => {
 
   const { register, handleSubmit, reset } = useForm();
 
-  // ডাটা আসার পর ফর্ম ফিল্ডগুলো ফিলাপ হবে
   useEffect(() => {
     if (user) {
       reset({
@@ -60,54 +59,54 @@ const Profile = () => {
     }
   };
 
-const onSubmit = async (data: any) => {
-  const toastId = toast.loading("Updating profile...");
-  try {
-    const formData = new FormData();
+  const onSubmit = async (data: any) => {
+    const toastId = toast.loading("Updating profile...");
+    try {
+      const formData = new FormData();
 
-    if (selectedFile) {
-      formData.append("profilePicture", selectedFile);
-    }
-    formData.append("firstName", data.firstName || "");
-    formData.append("lastName", data.lastName || "");
-    formData.append("nickName", data.nickName || "");
-    formData.append("phone", data.phone || "");
+      if (selectedFile) {
+        formData.append("profilePicture", selectedFile);
+      }
+      formData.append("firstName", data.firstName || "");
+      formData.append("lastName", data.lastName || "");
+      formData.append("nickName", data.nickName || "");
+      formData.append("phone", data.phone || "");
 
-if (isSeller) {
-  const sellerPayload = {
-    companyName: data?.sellerData?.companyName || "",
-    address: data?.sellerData?.address || "",
-    city: data?.sellerData?.city || "",
-    state: data?.sellerData?.state || "",
-    country: user?.sellerProfile?.country || "BD",
-    zip: Number(data?.sellerData?.zip) || 0,
-    companyWebSite: user?.sellerProfile?.companyWebSite || "", 
-  };
-  formData.append("sellerData", JSON.stringify(sellerPayload));
-}
+      if (isSeller) {
+        const sellerPayload = {
+          companyName: data?.sellerData?.companyName || "",
+          address: data?.sellerData?.address || "",
+          city: data?.sellerData?.city || "",
+          state: data?.sellerData?.state || "",
+          country: user?.sellerProfile?.country || "BD",
+          zip: Number(data?.sellerData?.zip) || 0,
+          companyWebSite: user?.sellerProfile?.companyWebSite || "",
+        };
+        formData.append("sellerData", JSON.stringify(sellerPayload));
+      }
 
-    const res = await updateProfile(formData).unwrap();
+      const res = await updateProfile(formData).unwrap();
 
-    if (res.success) {
+      if (res.success) {
+        toast.update(toastId, {
+          render: "Profile updated successfully!",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+        setSelectedFile(null);
+        setPreviewUrl(null);
+      }
+    } catch (error: any) {
+      console.error("Update Error:", error);
       toast.update(toastId, {
-        render: "Profile updated successfully!",
-        type: "success",
+        render: error?.data?.message || "Update failed. Check console.",
+        type: "error",
         isLoading: false,
         autoClose: 3000,
       });
-      setSelectedFile(null);
-      setPreviewUrl(null);
     }
-  } catch (error: any) {
-    console.error("Update Error:", error);
-    toast.update(toastId, {
-      render: error?.data?.message || "Update failed. Check console.",
-      type: "error",
-      isLoading: false,
-      autoClose: 3000,
-    });
-  }
-};
+  };
 
   if (isFetching) {
     return (
@@ -118,7 +117,11 @@ if (isSeller) {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-8 animate-in fade-in duration-700">
+    // Added 'notranslate' to the main container
+    <div
+      className="max-w-5xl mx-auto p-4 md:p-8 animate-in fade-in duration-700 notranslate"
+      translate="no"
+    >
       <div className="bg-white rounded-[40px] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden">
         {/* Banner & Avatar */}
         <div className="h-32 bg-gradient-to-r from-[#0064AE] to-[#003d6b] relative">
@@ -147,7 +150,7 @@ if (isSeller) {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="absolute bottom-2 right-2 p-2 bg-black text-white rounded-xl shadow-lg hover:scale-110 transition-transform cursor-pointer"
+                className="absolute bottom-2 right-2 p-2 bg-black text-white rounded-xl shadow-lg hover:scale-110 transition-transform cursor-pointer notranslate"
               >
                 <Camera size={16} />
               </button>
@@ -171,7 +174,7 @@ if (isSeller) {
           <button
             type="button"
             onClick={() => setActiveTab("personal")}
-            className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative ${activeTab === "personal" ? "text-[#0064AE]" : "text-slate-400"}`}
+            className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative notranslate ${activeTab === "personal" ? "text-[#0064AE]" : "text-slate-400"}`}
           >
             Personal Info
             {activeTab === "personal" && (
@@ -182,7 +185,7 @@ if (isSeller) {
             <button
               type="button"
               onClick={() => setActiveTab("business")}
-              className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative ${activeTab === "business" ? "text-[#0064AE]" : "text-slate-400"}`}
+              className={`pb-4 text-sm font-black uppercase tracking-widest transition-all relative notranslate ${activeTab === "business" ? "text-[#0064AE]" : "text-slate-400"}`}
             >
               Business Details
               {activeTab === "business" && (
@@ -255,7 +258,7 @@ if (isSeller) {
             <button
               disabled={isUpdating}
               type="submit"
-              className="w-full md:w-auto px-10 py-4 bg-[#0064AE] hover:bg-[#00528f] text-white rounded-2xl font-black uppercase text-xs tracking-[2px] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-lg disabled:opacity-50"
+              className="w-full md:w-auto px-10 py-4 bg-[#0064AE] hover:bg-[#00528f] text-white rounded-2xl font-black uppercase text-xs tracking-[2px] flex items-center justify-center gap-3 transition-all active:scale-95 shadow-lg disabled:opacity-50 notranslate"
             >
               {isUpdating ? (
                 <Loader2 className="animate-spin" size={18} />
@@ -271,7 +274,6 @@ if (isSeller) {
   );
 };
 
-// --- সংশোধিত ইনপুট কম্পোনেন্ট ---
 const CustomInput = ({
   label,
   register,
@@ -281,7 +283,7 @@ const CustomInput = ({
   value,
   helper,
 }: any) => (
-  <div className="space-y-2 group">
+  <div className="space-y-2 group notranslate" translate="no">
     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">
       {label}
     </label>
@@ -295,8 +297,8 @@ const CustomInput = ({
         {...register}
         type={type}
         disabled={disabled}
-        defaultValue={value} // value এর বদলে defaultValue অথবা register হ্যান্ডেল করবে
-        className={`w-full ${icon ? "pl-12" : "pl-4"} pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-50 focus:border-[#0064AE] outline-none transition-all font-bold text-slate-700 disabled:bg-slate-100 disabled:text-slate-400`}
+        defaultValue={value}
+        className={`w-full ${icon ? "pl-12" : "pl-4"} pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-4 focus:ring-blue-50 focus:border-[#0064AE] outline-none transition-all font-bold text-slate-700 disabled:bg-slate-100 disabled:text-slate-400 notranslate`}
       />
     </div>
     {helper && (

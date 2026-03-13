@@ -1,7 +1,7 @@
-import * as React from "react"
-import { Separator as SeparatorPrimitive } from "radix-ui"
+import * as React from "react";
+import * as SeparatorPrimitive from "@radix-ui/react-separator";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 function Separator({
   className,
@@ -14,13 +14,15 @@ function Separator({
       data-slot="separator"
       decorative={decorative}
       orientation={orientation}
+      // Added 'notranslate' class and translate="no" for safety
       className={cn(
-        "bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px",
-        className
+        "bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px notranslate",
+        className,
       )}
+      translate="no"
       {...props}
     />
-  )
+  );
 }
 
-export { Separator }
+export { Separator };
