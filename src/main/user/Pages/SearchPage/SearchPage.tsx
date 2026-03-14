@@ -60,7 +60,7 @@ const SearchPage = () => {
   const ads = data?.data || [];
   const meta = data?.meta || { total: 0, page: 1, limit: 12 };
   const totalPages = Math.ceil(meta.total / meta.limit) || 1;
-
+console.log(data);
   return (
     <div className="min-h-screen bg-gray-50/30">
       {/* Desktop Filter */}
