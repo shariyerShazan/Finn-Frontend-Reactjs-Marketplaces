@@ -116,8 +116,9 @@ console.log(seller);
               </a>
 
               <a
+              translate="no"
                 href={`mailto:${seller?.email}`}
-                className={`flex items-center gap-4 p-3 rounded-2xl bg-slate-50 transition-all ${seller?.email === "Private" ? "pointer-events-none opacity-60" : "hover:bg-[#0064AE] hover:text-white group"}`}
+                className={`flex items-center notranslate gap-4 p-3 rounded-2xl bg-slate-50 transition-all ${seller?.email === "Private" ? "pointer-events-none opacity-60" : "hover:bg-[#0064AE] hover:text-white group"}`}
               >
                 <Mail
                   size={20}
