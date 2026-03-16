@@ -72,7 +72,7 @@ const Navbar = () => {
             Home
           </Link>
 
-          {isLoading ? (
+          {/* {isLoading ? (
             <Loader2 className="animate-spin w-4 h-4 text-white/50" />
           ) : (
             <>
@@ -107,7 +107,21 @@ const Navbar = () => {
 
               
             </>
-          )}
+          )} */}
+
+          <Link to="/about" className="hover:text-slate-200 transition-colors">
+            About
+          </Link>
+
+          <Link to="/contact" className="hover:text-slate-200 transition-colors">
+            Contact
+          </Link>
+          <Link to="/privacy" className="hover:text-slate-200 transition-colors">
+            Privacy
+          </Link>
+          <Link to="/faq" className="hover:text-slate-200 transition-colors">
+            FAQ's
+          </Link>
         </div>
 
         {/* --- Actions --- */}
