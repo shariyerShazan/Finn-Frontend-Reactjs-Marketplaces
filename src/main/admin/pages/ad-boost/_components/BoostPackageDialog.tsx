@@ -76,7 +76,7 @@ const BoostPackageDialog = ({ isOpen, onClose, pkg }: any) => {
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-4">
+        <form translate="no" onSubmit={handleSubmit(onSubmit)} className="notranslate space-y-6 pt-4">
           <div className="grid grid-cols-2 gap-5">
             <div className="col-span-2 space-y-1.5">
               <label className="text-xs font-black text-slate-400 uppercase tracking-widest">
@@ -119,9 +119,9 @@ const BoostPackageDialog = ({ isOpen, onClose, pkg }: any) => {
                 {...register("type", { required: true })}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-[#0064AE] outline-none font-bold"
               >
-                <option value="BASIC">BASIC (Highlighted)</option>
-                <option value="PREMIUM">PREMIUM (Category Top)</option>
-                <option value="ULTRA">ULTRA (Home Page)</option>
+                <option value="BASIC">BASIC</option>
+                <option value="PREMIUM">PREMIUM</option>
+                <option value="ULTRA">ULTRA</option>
               </select>
             </div>
 
@@ -139,10 +139,10 @@ const BoostPackageDialog = ({ isOpen, onClose, pkg }: any) => {
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
-            <button
+            <button translate="no"
               type="submit"
               disabled={isCreating || isUpdating}
-              className="w-full cursor-pointer py-4 bg-[#0064AE] text-white font-black rounded-2xl hover:bg-[#005291] transition-all shadow-xl shadow-blue-100 uppercase tracking-widest text-sm"
+              className="w-full notranslate cursor-pointer py-4 bg-[#0064AE] text-white font-black rounded-2xl hover:bg-[#005291] transition-all shadow-xl shadow-blue-100 uppercase tracking-widest text-sm"
             >
               {isCreating || isUpdating ? (
                 <Loader2 className="animate-spin mx-auto" />
