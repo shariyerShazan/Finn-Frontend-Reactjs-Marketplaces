@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import React from "react";
-import { Heart, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 // Functional Component with Prisma Props
@@ -27,9 +27,9 @@ const AdCard = ({ ad }: { ad: any }) => {
         </div>
 
         {/* Heart Icon */}
-        <button className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white transition">
+        {/* <button className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/40 backdrop-blur-md rounded-full text-white transition">
           <Heart size={20} />
-        </button>
+        </button> */}
 
         {/* Price Badge - Custom Styled Blue */}
         <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 z-10">

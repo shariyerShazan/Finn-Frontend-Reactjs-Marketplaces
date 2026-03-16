@@ -23,7 +23,7 @@ const SellerSubscriptionPage = () => {
   // console.log(plansData, historyData)
   const plans = plansData?.data || [];
   const history = historyData?.data || [];
-console.log(historyData);
+  console.log(historyData);
   useEffect(() => {
     const status = searchParams.get("status");
     if (status === "success") {
