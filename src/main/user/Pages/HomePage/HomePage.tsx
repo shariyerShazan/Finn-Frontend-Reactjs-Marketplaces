@@ -2,6 +2,7 @@
 import { useGetAllCategoriesQuery } from "@/redux/fetures/admin/admin-category.api";
 import LatestAddHome from "./_components/Home/LatestAddHome";
 import SearchAndCategory from "./_components/SearchAndCategory";
+import BestAdsHome from "./_components/Home/BestAdsHome";
 
 const HomePage = () => {
   const { data: categoriesRes } = useGetAllCategoriesQuery({
@@ -16,6 +17,8 @@ const HomePage = () => {
       <SearchAndCategory />
 
       <main className="max-w-7xl mx-auto py-10 px-4">
+        <BestAdsHome />
+        
         {/* Latest ads */}
         <LatestAddHome title="Latest Ads Added In Your Area" />
 
