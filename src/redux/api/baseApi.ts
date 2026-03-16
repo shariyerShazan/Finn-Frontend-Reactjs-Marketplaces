@@ -55,8 +55,9 @@ export const baseApi = createApi({
     "Payments",
     "SubscriptionPlan",
     "Notification",
-    "UnreadCount"
-    
+    "UnreadCount",
+    "AdBoost",
+    "Boosts",
   ],
   endpoints: () => ({}),
 });
