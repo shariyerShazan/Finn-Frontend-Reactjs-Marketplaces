@@ -1,30 +1,37 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import { useEffect, useState } from "react";
 import {
   LayoutGrid,
   Map as MapIcon,
   Loader2,
   PackageSearch,
-  SlidersHorizontal,
+  // ExternalLink,
 } from "lucide-react";
-
 import FilterSearch from "./_components/FilterSearch";
-// import MobileFilterSheet from "@/components/MobileFilterSheet";
 import AdCard from "../HomePage/_components/AdCard";
 import CommonPagination from "../../_components/CommonPagination";
-
 import { useGetAllAdsQuery } from "@/redux/fetures/ads.api";
-import { useSearchParams } from "react-router-dom";
-import MobileFilterSheet from "./_components/MobileFilterSheet";
+import { Link, useSearchParams } from "react-router-dom";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const SearchPage = () => {
+  // Fix for default Leaflet marker icons in React
+  const customIcon = new L.Icon({
+    iconUrl:
+      "[https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png](https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png)",
+    shadowUrl:
+      "[https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png](https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png)",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+  });
+
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
-  const [openFilter, setOpenFilter] = useState(false);
-
   const initialSearch = searchParams.get("search") || "";
   const initialCategory = searchParams.get("category") || "all";
 
@@ -37,7 +44,6 @@ const SearchPage = () => {
     page: 1,
     limit: 12,
   });
-
   useEffect(() => {
     setFilters((prev) => ({
       ...prev,
@@ -60,60 +66,53 @@ const SearchPage = () => {
   const ads = data?.data || [];
   const meta = data?.meta || { total: 0, page: 1, limit: 12 };
   const totalPages = Math.ceil(meta.total / meta.limit) || 1;
-console.log(data);
+
+  const defaultCenter: [number, number] =
+    ads.length > 0 && ads[0].latitude
+      ? [ads[0].latitude, ads[0].longitude]
+      : [23.8103, 90.4125]; // Default Dhaka
+
   return (
     <div className="min-h-screen bg-gray-50/30">
-      {/* Desktop Filter */}
-      <div className="hidden md:block">
-        <FilterSearch filters={filters} setFilters={setFilters} />
-      </div>
+      {/* 🔍 Sticky Filter Section */}
+      <FilterSearch filters={filters} setFilters={setFilters} />
 
-      {/* Mobile Filter Button */}
-      <div className="md:hidden p-4">
-        <button
-          onClick={() => setOpenFilter(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#0064AE] text-white rounded-lg font-semibold"
-        >
-          <SlidersHorizontal size={18} />
-          Filters
-        </button>
-      </div>
+      <div className="mx-auto px-6 pb-12">
+        {/* 📊 Header Section */}
+        <div className="sticky top-30 z-40 py-4 bg-gray-50/30 backdrop-blur-md">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+              <h2 className="text-gray-800 text-base font-semibold flex items-center gap-2">
+                Found{" "}
+                <span className="text-[#0064AE] text-xl font-bold">
+                  {isFetching ? (
+                    <Loader2 className="animate-spin" size={18} />
+                  ) : (
+                    meta.total
+                  )}
+                </span>{" "}
+                Ads for your search
+              </h2>
+            </div>
 
-      <div className="mx-auto px-3 sm:px-6 pb-12">
-        {/* Header */}
-        <div className="sticky top-24 sm:top-28 z-40 py-3 sm:py-4 bg-gray-50/30 backdrop-blur-md">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <h2 className="text-gray-800 text-sm sm:text-base font-semibold flex items-center gap-2">
-              Found
-              <span className="text-[#0064AE] text-lg sm:text-xl font-bold">
-                {isFetching ? (
-                  <Loader2 className="animate-spin" size={18} />
-                ) : (
-                  meta.total
-                )}
-              </span>
-              Ads
-            </h2>
-
-            {/* View Switch */}
+            {/* View Switcher Controls */}
             <div className="flex items-center bg-white p-1 rounded-xl border border-slate-200 shadow-sm">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`px-4 py-2 rounded-lg ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
                   viewMode === "grid"
-                    ? "bg-[#0064AE] text-white"
-                    : "text-slate-500"
+                    ? "bg-[#0064AE] text-white shadow-md"
+                    : "text-slate-500 hover:bg-slate-50"
                 }`}
               >
                 <LayoutGrid size={18} />
               </button>
-
               <button
                 onClick={() => setViewMode("map")}
-                className={`px-4 py-2 rounded-lg ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
                   viewMode === "map"
-                    ? "bg-[#0064AE] text-white"
-                    : "text-slate-500"
+                    ? "bg-[#0064AE] text-white shadow-md"
+                    : "text-slate-500 hover:bg-slate-50"
                 }`}
               >
                 <MapIcon size={18} />
@@ -122,7 +121,7 @@ console.log(data);
           </div>
         </div>
 
-        {/* Content */}
+        {/* 📦 Main Display Area */}
         {isLoading ? (
           <div className="flex flex-col items-center justify-center h-[50vh]">
             <Loader2 className="animate-spin text-[#0064AE] mb-3" size={48} />
@@ -133,30 +132,107 @@ console.log(data);
         ) : viewMode === "grid" ? (
           <>
             {ads.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-6 gap-y-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-x-6 gap-y-12 animate-in fade-in duration-700">
                 {ads.map((ad: any) => (
                   <AdCard key={ad.id} ad={ad} />
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20">
-                <PackageSearch
-                  size={60}
-                  className="text-gray-300 mx-auto mb-4"
-                />
-                <p className="text-gray-500">No ads found</p>
+              <div className="text-center py-24 bg-white rounded-3xl border-2 border-dashed border-slate-200 flex flex-col items-center">
+                <PackageSearch size={64} className="text-slate-300 mb-4" />
+                <h3 className="text-xl font-bold text-slate-800">
+                  No results found
+                </h3>
+                <p className="text-slate-500 max-w-xs mx-auto mt-2">
+                  Try adjusting your filters or search keywords to find what
+                  you're looking for.
+                </p>
+                <button
+                  onClick={() =>
+                    setFilters({
+                      ...filters,
+                      search: "",
+                      category: "all",
+                      subCategory: "all",
+                    })
+                  }
+                  className="mt-6 text-[#0064AE] font-bold hover:underline"
+                >
+                  Clear all filters
+                </button>
               </div>
             )}
           </>
         ) : (
-          <div className="h-[60vh] flex items-center justify-center bg-gray-100 rounded-2xl">
-            Map view
+          <div className="w-full h-[75vh] rounded-[2rem] overflow-hidden border-4 border-white shadow-2xl z-10 relative group">
+            {/* Floating Indicator */}
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-[1000] bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-slate-200 text-xs font-bold text-slate-700 flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              Showing {ads?.length || 0} Available Locations
+            </div>
+
+            <MapContainer
+              center={defaultCenter}
+              zoom={13}
+              scrollWheelZoom={true}
+              className="w-full h-full"
+              zoomControl={false}
+              style={{ height: "100%", width: "100%" }}
+            >
+              {/* 🌍 Standard TileLayer: এটি কখনও মিস হবে না */}
+              <TileLayer
+                attribution='&copy; <a href="[https://www.openstreetmap.org/copyright](https://www.openstreetmap.org/copyright)">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+
+              {ads?.map(
+                (ad: any) =>
+                  ad.latitude &&
+                  ad.longitude && (
+                    <Marker
+                      key={ad.id}
+                      position={[Number(ad.latitude), Number(ad.longitude)]}
+                      icon={customIcon} // নিশ্চিত করুন customIcon উপরে ডিফাইন করা আছে
+                    >
+                      <Popup minWidth={260} className="custom-popup">
+                        <div className="relative overflow-hidden rounded-xl bg-white">
+                          <div className="relative h-32 w-full overflow-hidden">
+                            <img
+                              src={
+                                ad.images?.[0]?.url ||
+                                ad.images?.[0] ||
+                                "[https://via.placeholder.com/300x200](https://via.placeholder.com/300x200)"
+                              }
+                              alt={ad.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="p-3">
+                            <h4 className="font-bold text-slate-900 text-sm">
+                              {ad.title}
+                            </h4>
+                            <p className="text-[#0064AE] font-bold text-xs">
+                              {ad.price} {ad.currency || "PLN"}
+                            </p>
+                            <Link
+                              to={`/item-details/${ad.id}`}
+                              className="mt-3 block text-center bg-slate-900 text-white py-2 rounded-lg text-[11px] font-bold"
+                            >
+                              View Details
+                            </Link>
+                          </div>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  ),
+              )}
+            </MapContainer>
           </div>
         )}
 
-        {/* Pagination */}
+        {/* 📄 Pagination Controls */}
         {!isLoading && totalPages > 1 && (
-          <div className="mt-16 flex justify-center">
+          <div className="mt-20 flex justify-center">
             <CommonPagination
               currentPage={filters.page}
               totalPages={totalPages}
@@ -165,11 +241,6 @@ console.log(data);
           </div>
         )}
       </div>
-
-      {/* Mobile Bottom Sheet */}
-      <MobileFilterSheet open={openFilter} setOpen={setOpenFilter}>
-        <FilterSearch filters={filters} setFilters={setFilters} />
-      </MobileFilterSheet>
     </div>
   );
 };

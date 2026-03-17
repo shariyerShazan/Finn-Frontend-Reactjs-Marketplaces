@@ -201,7 +201,7 @@ const SellerSubscriptionPage = () => {
                     </td>
 
                     <td className="px-6 py-4 font-black text-[#0064AE]">
-                      {sub.plan?.price || 0} PLN
+                      {sub.totalSpent || 0} PLN
                     </td>
 
                     <td className="px-6 py-4">
