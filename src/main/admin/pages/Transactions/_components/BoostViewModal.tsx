@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-//   CheckCircle2,
+  //   CheckCircle2,
   Calendar,
   CreditCard,
   User,
@@ -60,12 +60,12 @@ const BoostViewModal = ({ isOpen, onClose, boost }: Props) => {
                   Package Type
                 </p>
                 <p className="text-sm font-bold text-amber-600">
-                  {boost.package.name}
+                  {boost?.package?.name}
                 </p>
               </div>
             </div>
             <span className="bg-amber-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">
-              {boost.status}
+              {boost?.status}
             </span>
           </div>
 
@@ -73,29 +73,29 @@ const BoostViewModal = ({ isOpen, onClose, boost }: Props) => {
             {detailItem(
               <User size={18} />,
               "Seller",
-              `${boost.seller.firstName} ${boost.seller.lastName}`,
+              `${boost?.seller?.firstName} ${boost?.seller?.lastName}`,
             )}
             {detailItem(
               <PackageSearch size={18} />,
               "Ad Title",
-              boost.ad.title,
+              boost?.ad?.title,
             )}
             {detailItem(
               <CreditCard size={18} />,
               "Transaction ID",
-              boost.transactionId || "N/A",
+              boost?.transactionId || "N/A",
             )}
 
             <div className="grid grid-cols-2 gap-3">
               {detailItem(
                 <Zap size={18} />,
                 "Price Paid",
-                `${boost.package.price} PLN`,
+                `${boost?.package?.price} PLN`,
               )}
               {detailItem(
                 <Calendar size={18} />,
                 "Duration",
-                `${boost.package.durationDays} Days`,
+                `${boost?.package?.durationDays} Days`,
               )}
             </div>
 
@@ -103,12 +103,12 @@ const BoostViewModal = ({ isOpen, onClose, boost }: Props) => {
               {detailItem(
                 <Calendar size={18} />,
                 "Activated",
-                new Date(boost.createdAt).toLocaleDateString(),
+                new Date(boost?.createdAt).toLocaleDateString(),
               )}
               {detailItem(
                 <Calendar size={18} />,
                 "Expires",
-                new Date(boost.endDate).toLocaleDateString(),
+                new Date(boost?.endDate).toLocaleDateString(),
               )}
             </div>
           </div>
