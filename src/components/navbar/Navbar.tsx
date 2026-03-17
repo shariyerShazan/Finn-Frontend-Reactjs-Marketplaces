@@ -1,15 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { User, Loader2, ChevronDown } from "lucide-react";
+import { User,  } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
-import { useGetAllCategoriesQuery } from "@/redux/fetures/admin/admin-category.api";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { useGetMeQuery } from "@/redux/fetures/users.api";
 import LanguageDropdown from "../translation/LanguageDropdown";
 
@@ -23,21 +17,21 @@ import LanguageDropdown from "../translation/LanguageDropdown";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { data: categoriesRes, isLoading } = useGetAllCategoriesQuery({
-    page: 1,
-    limit: 20,
-  });
+  // const { data: categoriesRes, isLoading } = useGetAllCategoriesQuery({
+  //   page: 1,
+  //   limit: 20,
+  // });
 
   const { data: userData } = useGetMeQuery();
 
-  const allCategories = categoriesRes?.data || [];
+  // const allCategories = categoriesRes?.data || [];
 
-  const visibleCategories = allCategories.slice(0, 5);
-  const hiddenCategories = allCategories.slice(5);
+  // const visibleCategories = allCategories.slice(0, 5);
+  // const hiddenCategories = allCategories.slice(5);
 
-  const handleNavClick = (slug: string) => {
-    navigate(`/search?search=${encodeURIComponent(slug)}`);
-  };
+  // const handleNavClick = (slug: string) => {
+  //   navigate(`/search?search=${encodeURIComponent(slug)}`);
+  // };
   // console.log(userData.data, "me");
   const dashboardNavigate = ()=> {
        if(userData?.data?.role === "USER"){
