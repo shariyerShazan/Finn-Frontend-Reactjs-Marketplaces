@@ -143,11 +143,11 @@ const Navbar = () => {
       {/* <LanguageDropdownNav/> */}
       <LanguageDropdown/>
   {userData ? (
-    <Button onClick={() => dashboardNavigate()} className="bg-black hover:bg-zinc-800 ...">
+    <Button  onClick={() => dashboardNavigate()} className="bg-black cursor-pointer hover:bg-zinc-800 ...">
       <User className="w-4 h-4" /> Dashboard
     </Button>
   ) : (
-     <Button onClick={() => navigate("login")}>Login</Button>
+     <Button className="cursor-pointer" onClick={() => navigate("login")}>Login</Button>
   )}
 </div>
       </div>

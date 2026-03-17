@@ -15,6 +15,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen">
       <SearchAndCategory />
+     
 
       <main className="max-w-7xl mx-auto py-10 px-4">
         <BestAdsHome />
