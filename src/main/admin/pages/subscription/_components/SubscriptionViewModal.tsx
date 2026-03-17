@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // import React from "react";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CheckCircle2, Calendar, HardDrive } from "lucide-react";
 
 const SubscriptionViewModal = ({ isOpen, onClose, plan }: any) => {
@@ -17,7 +14,7 @@ const SubscriptionViewModal = ({ isOpen, onClose, plan }: any) => {
             <p className="text-blue-100 text-xs font-black uppercase tracking-[3px]">
               Plan Details
             </p>
-            <h2 className="text-3xl font-black">{plan.name}</h2>
+            <h2 className="text-3xl font-black">{plan?.name}</h2>
           </div>
           <div className="absolute top-8 right-8 text-4xl font-black opacity-20">
             ${plan.price}
@@ -35,7 +32,7 @@ const SubscriptionViewModal = ({ isOpen, onClose, plan }: any) => {
                   Duration
                 </p>
                 <p className="text-sm font-bold text-slate-700">
-                  {plan.durationDays} Days
+                  {plan?.durationDays} Days
                 </p>
               </div>
             </div>
@@ -48,7 +45,7 @@ const SubscriptionViewModal = ({ isOpen, onClose, plan }: any) => {
                   Post Limit
                 </p>
                 <p className="text-sm font-bold text-slate-700">
-                  {plan.postLimit} Ads
+                  {plan?.postLimit} Ads
                 </p>
               </div>
             </div>
