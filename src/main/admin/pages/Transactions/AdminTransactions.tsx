@@ -111,7 +111,7 @@ const AdminTransactions = () => {
     {
       header: "Charges",
       render: (item) => (
-        <span className="font-bold text-slate-900">{item.plan.price} PLN</span>
+        <span className="font-bold text-slate-900">{item.totalSpent || 0} PLN</span>
       ),
     },
     {
