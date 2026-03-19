@@ -42,6 +42,7 @@ const SearchPage = () => {
   const initialSearch = searchParams.get("search") || "";
   const initialCategory = searchParams.get("category") || "all";
 
+  
   const [filters, setFilters] = useState({
     search: initialSearch,
     isSold: "false",
@@ -49,8 +50,16 @@ const SearchPage = () => {
     category: initialCategory,
     subCategory: "all",
     page: 1,
-    limit: 12,
+    limit: searchParams.get("view") === "map" ? 500 : 12,
   });
+
+  useEffect(() => {
+    setFilters((prev) => ({
+      ...prev,
+      limit: viewMode === "map" ? 500 : 12,
+      page: 1, // optional: reset page
+    }));
+  }, [viewMode]);
 
   useEffect(() => {
     setFilters((prev) => ({
