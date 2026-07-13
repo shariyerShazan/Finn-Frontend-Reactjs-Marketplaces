@@ -89,6 +89,7 @@ const ProfileCard = ({ user }: ProfileCardProps) => {
 
           <div className="grid gap-3">
             <DetailRow
+              translate="no"
               icon={<Mail size={14} />}
               label="Primary Email"
               value={user.email}

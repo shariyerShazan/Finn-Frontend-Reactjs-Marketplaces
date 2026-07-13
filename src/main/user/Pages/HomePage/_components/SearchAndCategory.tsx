@@ -110,7 +110,6 @@
 
 // // export default SearchAndCategory;
 
-
 // /* eslint-disable @typescript-eslint/no-explicit-any */
 // "use client";
 // import { useState } from "react";
@@ -247,7 +246,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Search, Loader2, LayoutGrid } from "lucide-react";
 import bgImg from "@/assets/bg.jpg";
 import { useGetAllCategoriesQuery } from "@/redux/fetures/admin/admin-category.api";
@@ -257,6 +256,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import {  FaMapMarker } from "react-icons/fa";
 
 const SearchAndCategory = () => {
   const navigate = useNavigate();
@@ -319,7 +319,7 @@ const SearchAndCategory = () => {
         </h1>
 
         {/* --- Search Bar --- */}
-        <div className="flex flex-col md:flex-row items-center justify-center max-w-2xl mx-auto border border-slate-200 rounded-xl shadow-md bg-white overflow-hidden mb-10">
+        {/* <div className="flex flex-col md:flex-row items-center justify-center max-w-2xl mx-auto border border-slate-200 rounded-xl shadow-md bg-white overflow-hidden mb-10">
           <div className="flex items-center flex-1 px-4 py-2.5">
             <Search className="text-slate-400 mr-2" size={18} />
             <input
@@ -337,6 +337,41 @@ const SearchAndCategory = () => {
           >
             Search
           </button>
+         
+        </div> */}
+        <div className="flex flex-col md:flex-row items-center justify-center max-w-2xl mx-auto border border-slate-200 rounded-xl shadow-md bg-white overflow-hidden mb-10">
+          {/* 🔍 Input */}
+          <div className="flex items-center flex-1 px-4 py-2.5">
+            <Search className="text-slate-400 mr-2" size={18} />
+            <input
+              type="text"
+              placeholder="Search anything..."
+              className="w-full outline-none text-sm text-slate-600 font-medium"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            />
+          </div>
+
+          {/* 🔘 Buttons */}
+          <div className="flex">
+            {/* Search Button */}
+            <button
+              onClick={handleSearch}
+              className="bg-[#0064AE] cursor-pointer hover:bg-[#004f8b] text-white px-6 py-3 text-sm font-bold transition-all active:scale-95"
+            >
+              Search
+            </button>
+
+            {/* Map Button */}
+            <Link
+              to={`/search?search=${encodeURIComponent(searchTerm)}&view=map`}
+            >
+              <button className="px-3 py-2 cursor-pointer">
+                <FaMapMarker className="text-[#0064AE] text-2xl" />
+              </button>
+            </Link>
+          </div>
         </div>
 
         {/* --- Minimal Categories Slider --- */}

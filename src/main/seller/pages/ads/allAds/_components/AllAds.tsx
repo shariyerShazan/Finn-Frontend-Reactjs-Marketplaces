@@ -1,8 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search, Eye, Edit, Trash2, Filter, Loader2, RotateCcw, CheckCircle } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Eye,
+  Edit,
+  Trash2,
+  Filter,
+  Loader2,
+  RotateCcw,
+  CheckCircle,
+  Rocket,
+  Zap,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -18,10 +30,15 @@ import CommonPagination from "@/main/user/_components/CommonPagination";
 import { useNavigate } from "react-router";
 // import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { useDeleteAdMutation, useToggleSoldStatusMutation } from "@/redux/fetures/ads.api"; // delete ad common hote pare
+import {
+  useDeleteAdMutation,
+  useToggleSoldStatusMutation,
+} from "@/redux/fetures/ads.api"; // delete ad common hote pare
 import { useGetMyAdsQuery } from "@/redux/fetures/users.api";
 import ViewAdDialog from "./ViewAdDialogProps";
 import { toast } from "react-toastify";
+import BoostAdSelectionModal from "./BoostAdSelectionModal";
+
 
 interface AdData {
   id: string;
@@ -39,6 +56,9 @@ interface AdData {
 const AllAds = () => {
   const navigate = useNavigate();
 
+  const [isBoostModalOpen, setIsBoostModalOpen] = useState(false);
+  const [adIdToBoost, setAdIdToBoost] = useState<string | null>(null);
+
   // --- States ---
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -55,44 +75,44 @@ const AllAds = () => {
     // Note: Backend-e isSold filter query-te handle na thakle eita active hobe na,
     // kintu standard practice hisebe eivabe pathano jay.
   });
-console.log(data, "ok");
+  console.log(data, "ok");
   const [deleteAd] = useDeleteAdMutation();
-const [toggleSold] = useToggleSoldStatusMutation();
+  const [toggleSold] = useToggleSoldStatusMutation();
 
-const handleToggleSold = async (adId: string, currentStatus: boolean) => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: currentStatus
-      ? "Do you want to mark this item as AVAILABLE?"
-      : "Do you want to mark this item as SOLD?",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonColor: currentStatus ? "#0064AE" : "#10b981", // Available হলে Blue, Sold হলে Green
-    cancelButtonColor: "#64748b",
-    confirmButtonText: currentStatus
-      ? "Yes, make it available!"
-      : "Yes, mark as sold!",
-    background: "#fff",
-    customClass: {
-      popup: "rounded-[24px]",
-      confirmButton:
-        "rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest",
-      cancelButton:
-        "rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest",
-    },
-  });
+  const handleToggleSold = async (adId: string, currentStatus: boolean) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: currentStatus
+        ? "Do you want to mark this item as AVAILABLE?"
+        : "Do you want to mark this item as SOLD?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: currentStatus ? "#0064AE" : "#10b981", // Available হলে Blue, Sold হলে Green
+      cancelButtonColor: "#64748b",
+      confirmButtonText: currentStatus
+        ? "Yes, make it available!"
+        : "Yes, mark as sold!",
+      background: "#fff",
+      customClass: {
+        popup: "rounded-[24px]",
+        confirmButton:
+          "rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest",
+        cancelButton:
+          "rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-widest",
+      },
+    });
 
-  if (result.isConfirmed) {
-    try {
-      const res = await toggleSold(adId).unwrap();
-      if (res.success) {
-        toast.success(res.message);
+    if (result.isConfirmed) {
+      try {
+        const res = await toggleSold(adId).unwrap();
+        if (res.success) {
+          toast.success(res.message);
+        }
+      } catch (error: any) {
+        toast.error(error?.data?.message || "Failed to update status");
       }
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to update status");
     }
-  }
-};
+  };
 
   // Data structure according to your NestJS backend response
   const adsList = (data as any)?.data || [];
@@ -100,174 +120,205 @@ const handleToggleSold = async (adId: string, currentStatus: boolean) => {
   const totalPages = meta?.lastPage || 1;
 
   // --- Handlers ---
-const handleDelete = async (id: string) => {
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#0064AE", 
-    cancelButtonColor: "#ef4444",
-    confirmButtonText: "Yes, delete it!",
-    cancelButtonText: "Cancel",
-    customClass: {
-      popup: "rounded-2xl",
-      confirmButton: "rounded-xl px-6 py-3",
-      cancelButton: "rounded-xl px-6 py-3",
-    },
-  });
+  const handleDelete = async (id: string) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#0064AE",
+      cancelButtonColor: "#ef4444",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      customClass: {
+        popup: "rounded-2xl",
+        confirmButton: "rounded-xl px-6 py-3",
+        cancelButton: "rounded-xl px-6 py-3",
+      },
+    });
 
-  if (result.isConfirmed) {
-    try {
-      await deleteAd(id).unwrap();
-      await Swal.fire({
-        title: "Deleted!",
-        text: "Your ad has been removed successfully.",
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-        customClass: {
-          popup: "rounded-2xl",
-        },
-      });
-
-    } catch (err: any) {
-      Swal.fire({
-        title: "Error!",
-        text: err?.data?.message || "Failed to delete ad",
-        icon: "error",
-        confirmButtonColor: "#0064AE",
-        customClass: {
-          popup: "rounded-2xl",
-        },
-      });
+    if (result.isConfirmed) {
+      try {
+        await deleteAd(id).unwrap();
+        await Swal.fire({
+          title: "Deleted!",
+          text: "Your ad has been removed successfully.",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+          customClass: {
+            popup: "rounded-2xl",
+          },
+        });
+      } catch (err: any) {
+        Swal.fire({
+          title: "Error!",
+          text: err?.data?.message || "Failed to delete ad",
+          icon: "error",
+          confirmButtonColor: "#0064AE",
+          customClass: {
+            popup: "rounded-2xl",
+          },
+        });
+      }
     }
-  }
-};
+  };
 
   const handleOpenView = (ad: AdData) => {
     setSelectedAd(ad);
     setIsViewOpen(true);
   };
 
-const columns: Column<AdData>[] = [
-  {
-    header: "Serial ID",
-    render: (item) => (
-      <span className="text-xs text-slate-400 font-mono bg-slate-50 px-2 py-1 rounded">
-        #{item.id.slice(-6).toUpperCase()}
-      </span>
-    ),
-  },
-  {
-    header: "Ads Title",
-    render: (item) => (
-      <div className="flex items-center gap-3">
-        <img
-          src={item.images?.[0]?.url || "https://via.placeholder.com/150"}
-          alt=""
-          className="w-12 h-12 rounded-lg object-cover border border-slate-100 shadow-sm"
-        />
-        <div className="flex flex-col">
-          <span className="font-bold text-slate-800 line-clamp-1 max-w-[180px]">
-            {item.title}
-          </span>
-          <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wider">
-            {item.category?.name || "General"}
+  const columns: Column<AdData>[] = [
+    {
+      header: "Serial ID",
+      render: (item) => (
+        <span className="text-xs text-slate-400 font-mono bg-slate-50 px-2 py-1 rounded">
+          #{item.id.slice(-6).toUpperCase()}
+        </span>
+      ),
+    },
+    {
+      header: "Ads Title",
+      render: (item) => (
+        <div className="flex items-center gap-3">
+          <img
+            src={item.images?.[0]?.url || "https://via.placeholder.com/150"}
+            alt=""
+            className="w-12 h-12 rounded-lg object-cover border border-slate-100 shadow-sm"
+          />
+          <div className="flex flex-col">
+            <span className="font-bold text-slate-800 line-clamp-1 max-w-[180px]">
+              {item.title}
+            </span>
+            <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wider">
+              {item.category?.name || "General"}
+            </span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Price",
+      render: (item) => (
+        <span className="font-bold text-slate-900">
+          ${item.price?.toLocaleString()}
+        </span>
+      ),
+    },
+    {
+      header: "Views",
+      render: (item) => (
+        <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-50 rounded-full w-fit">
+          <Eye size={14} className="text-blue-500" />
+          <span className="text-sm font-semibold text-slate-700">
+            {(item as any).viewerIds.length || 0}
           </span>
         </div>
-      </div>
-    ),
-  },
-  {
-    header: "Price",
-    render: (item) => (
-      <span className="font-bold text-slate-900">
-        ${item.price?.toLocaleString()}
-      </span>
-    ),
-  },
-  {
-    header: "Views",
-    render: (item) => (
-      <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-50 rounded-full w-fit">
-        <Eye size={14} className="text-blue-500" />
-        <span className="text-sm font-semibold text-slate-700">
-          {(item as any).viewerIds.length || 0}
-        </span>
-      </div>
-    ),
-  },
-  {
-    header: "Published",
-    render: (item) => (
-      <div className="flex flex-col">
-        <span className="text-sm text-slate-600 font-medium">
-          {new Date(item.createdAt).toLocaleDateString("en-GB")}
-        </span>
-        <span className="text-[10px] text-slate-400">
-          {new Date(item.createdAt).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </span>
-      </div>
-    ),
-  },
-  {
-    header: "Status",
-    render: (item) => (
-      <Badge
-        className={`px-3 py-1 border-none shadow-none font-bold ${
-          !item.isSold
-            ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-            : "bg-slate-100 text-slate-500 hover:bg-slate-100"
-        }`}
-      >
-        {!item.isSold ? "Active" : "Sold"}
-      </Badge>
-    ),
-  },
-  {
-    header: "Action",
-    render: (item) => (
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => handleToggleSold(item.id, item.isSold)}
-          title={item.isSold ? "Mark as Available" : "Mark as Sold"}
-          className={`p-2 border rounded-xl transition-all cursor-pointer shadow-sm ${
-            item.isSold
-              ? "text-amber-500 border-amber-100 hover:bg-amber-50"
-              : "text-emerald-500 border-emerald-100 hover:bg-emerald-50"
+      ),
+    },
+    {
+      header: "Published",
+      render: (item) => (
+        <div className="flex flex-col">
+          <span className="text-sm text-slate-600 font-medium">
+            {new Date(item.createdAt).toLocaleDateString("en-GB")}
+          </span>
+          <span className="text-[10px] text-slate-400">
+            {new Date(item.createdAt).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </span>
+        </div>
+      ),
+    },
+    {
+      header: "Status",
+      render: (item) => (
+        <Badge
+          className={`px-3 py-1 border-none shadow-none font-bold ${
+            !item.isSold
+              ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+              : "bg-slate-100 text-slate-500 hover:bg-slate-100"
           }`}
         >
-          {item.isSold ? <RotateCcw size={16} /> : <CheckCircle size={16} />}
-        </button>
-        <button
-          onClick={() => handleOpenView(item)}
-          title="View Details"
-          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 border border-slate-100 rounded-xl transition-all cursor-pointer shadow-sm"
-        >
-          <Eye size={16} />
-        </button>
-        <button
-          onClick={() => navigate(`/seller/dashboard/ads/edit/${item.id}`)}
-          title="Edit Ad"
-          className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 border border-slate-100 rounded-xl transition-all cursor-pointer shadow-sm"
-        >
-          <Edit size={16} />
-        </button>
-        <button
-          onClick={() => handleDelete(item.id)}
-          title="Delete Ad"
-          className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 border border-slate-100 rounded-xl transition-all cursor-pointer shadow-sm"
-        >
-          <Trash2 size={16} />
-        </button>
-      </div>
-    ),
-  },
-];
+          {!item.isSold ? "Active" : "Sold"}
+        </Badge>
+      ),
+    },
+    {
+      header: "Action",
+      render: (item) => (
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => handleToggleSold(item.id, item.isSold)}
+            title={item.isSold ? "Mark as Available" : "Mark as Sold"}
+            className={`p-2 border rounded-xl transition-all cursor-pointer shadow-sm ${
+              item.isSold
+                ? "text-amber-500 border-amber-100 hover:bg-amber-50"
+                : "text-emerald-500 border-emerald-100 hover:bg-emerald-50"
+            }`}
+          >
+            {item.isSold ? <RotateCcw size={16} /> : <CheckCircle size={16} />}
+          </button>
+          <button
+            onClick={() => handleOpenView(item)}
+            title="View Details"
+            className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 border border-slate-100 rounded-xl transition-all cursor-pointer shadow-sm"
+          >
+            <Eye size={16} />
+          </button>
+          <button
+            onClick={() => navigate(`/seller/dashboard/ads/edit/${item.id}`)}
+            title="Edit Ad"
+            className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 border border-slate-100 rounded-xl transition-all cursor-pointer shadow-sm"
+          >
+            <Edit size={16} />
+          </button>
+          <button
+            onClick={() => handleDelete(item.id)}
+            title="Delete Ad"
+            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 border border-slate-100 rounded-xl transition-all cursor-pointer shadow-sm"
+          >
+            <Trash2 size={16} />
+          </button>
+          <button
+            onClick={() => {
+              setAdIdToBoost(item.id);
+              setIsBoostModalOpen(true);
+            }}
+            title="Boost Ad"
+            className="p-2 text-amber-500 hover:bg-amber-50 border border-amber-100 rounded-xl transition-all cursor-pointer shadow-sm"
+          >
+            <Rocket size={16} />
+          </button>
+        </div>
+      ),
+    },
+    {
+      header: "Boost Info",
+      render: (item: any) => (
+        <div className="min-w-[140px]">
+          {item.isBoosted && item.boostInfo?.endDate ? (
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-1 text-amber-600">
+                <Zap size={12} className="fill-amber-500" />
+                <span className="text-[10px] font-black uppercase tracking-wider">
+                  Premium Boost
+                </span>
+              </div>
+              <RemainingTime endDate={item.boostInfo.endDate} />
+            </div>
+          ) : (
+            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+              No Active Boost
+            </span>
+          )}
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -359,7 +410,6 @@ const columns: Column<AdData>[] = [
         {/* Pagination Section */}
         <div className="p-6 bg-slate-50/50 border-t border-slate-100">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-           
             <CommonPagination
               currentPage={page}
               totalPages={totalPages || 1}
@@ -376,8 +426,58 @@ const columns: Column<AdData>[] = [
         ad={selectedAd}
         onEdit={(id) => navigate(`/seller/dashboard/ads/edit/${id}`)}
       />
+      <BoostAdSelectionModal
+        isOpen={isBoostModalOpen}
+        onClose={() => setIsBoostModalOpen(false)}
+        adId={adIdToBoost}
+      />
     </div>
   );
 };
 
 export default AllAds;
+
+const RemainingTime = ({ endDate }: { endDate: string }) => {
+  const [timeLeft, setTimeLeft] = useState("");
+
+  useEffect(() => {
+    const calculateTime = () => {
+      const now = new Date().getTime();
+      const expiry = new Date(endDate).getTime();
+      const diff = expiry - now;
+
+      if (diff <= 0) {
+        setTimeLeft("Expired");
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(
+        (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+      );
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+      setTimeLeft(`${days}d ${hours}h ${minutes}m`);
+    };
+
+    calculateTime();
+    const timer = setInterval(calculateTime, 60000);
+    return () => clearInterval(timer);
+  }, [endDate]);
+
+  if (timeLeft === "Expired") {
+    return (
+      <div className="flex items-center gap-1 text-rose-500 bg-rose-50 px-2 py-0.5 rounded-md w-fit border border-rose-100">
+        <span className="text-[10px] font-black uppercase">Expired</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md w-fit border border-amber-100">
+      <span className="text-[10px] font-bold whitespace-nowrap">
+        {timeLeft} left
+      </span>
+    </div>
+  );
+};

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const rawBaseQuery = fetchBaseQuery({
@@ -5,7 +6,7 @@ const rawBaseQuery = fetchBaseQuery({
   // baseUrl:"http://localhost:3002",
   credentials: "include",
 });
-
+// url changed
 export const customBaseQuery = async (args: any, api: any, extraOptions: any) => {
   // get language from localStorage
   const lang = localStorage.getItem("lang");
