@@ -56,7 +56,7 @@ const UserChat = () => {
     return <div className="p-10 text-center">Loading Chats...</div>;
 
   return (
-    <div className="p-4">
+    <div translate="no" className="p-4 notranslate">
       <div className="flex h-[80vh] mx-auto border rounded-2xl overflow-hidden shadow-xl bg-white m-4">
         <SearchChatSection
           conversations={conversations}
