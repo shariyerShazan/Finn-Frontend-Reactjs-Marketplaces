@@ -203,7 +203,10 @@ const AllSellers = () => {
     {
       header: "Email Address",
       render: (item) => (
-        <span className="text-xs font-medium text-slate-600 lowercase tracking-tight">
+        <span
+          translate="no"
+          className="text-xs notranslate font-medium text-slate-600 lowercase tracking-tight"
+        >
           {item.email}
         </span>
       ),

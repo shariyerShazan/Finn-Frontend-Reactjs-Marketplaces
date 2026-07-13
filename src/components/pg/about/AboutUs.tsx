@@ -29,7 +29,7 @@ const AboutUs = () => {
             We Connect <span className="text-[#0064AE]">Buyers & Sellers</span>
           </h1>
           <p className="text-lg text-slate-600 leading-relaxed">
-            Finn is Bangladesh's fastest-growing classifieds platform. Our
+            Finn is Europe's fastest-growing classifieds platform. Our
             mission is to make local trade easier, faster, and more secure for
             everyone.
           </p>

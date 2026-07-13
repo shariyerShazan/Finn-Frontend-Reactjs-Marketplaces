@@ -138,7 +138,7 @@ const SellerViewModal = ({
                     @{seller.nickName}
                   </p>
                   <div className="flex flex-col gap-1 text-[11px] text-slate-500 font-semibold uppercase">
-                    <span className="flex items-center gap-2">
+                    <span translate="no" className="flex notranslate items-center gap-2">
                       <Mail size={12} /> {seller.email}
                     </span>
                     <span className="flex items-center gap-2">

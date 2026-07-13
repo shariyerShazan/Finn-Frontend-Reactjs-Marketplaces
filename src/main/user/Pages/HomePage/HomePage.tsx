@@ -2,37 +2,35 @@
 import { useGetAllCategoriesQuery } from "@/redux/fetures/admin/admin-category.api";
 import LatestAddHome from "./_components/Home/LatestAddHome";
 import SearchAndCategory from "./_components/SearchAndCategory";
+import BestAdsHome from "./_components/Home/BestAdsHome";
 
 const HomePage = () => {
-
   const { data: categoriesRes } = useGetAllCategoriesQuery({
     page: 1,
     limit: 10,
   });
-  const categories = categoriesRes?.data || [];
 
-  const realEstateId = categories.find(
-    (c: any) => c.slug === "real-estate",
-  )?.id;
-  const electronicsId = categories.find((c: any) => c.slug === "electronics")?.id;
+  const categories = categoriesRes?.data || [];
 
   return (
     <div className="min-h-screen">
       <SearchAndCategory />
+     
 
       <main className="max-w-7xl mx-auto py-10 px-4">
+        <BestAdsHome />
+        
+        {/* Latest ads */}
         <LatestAddHome title="Latest Ads Added In Your Area" />
 
-        {realEstateId && (
-          <LatestAddHome title="Top of Real-Estate" categoryId={realEstateId} />
-        )}
-
-        {electronicsId && (
+        {/* Dynamic category sections */}
+        {categories.map((category: any) => (
           <LatestAddHome
-            title="Most Popular in vehicle"
-            categoryId={electronicsId}
+            key={category.id}
+            title={`Most Popular in ${category.name}`}
+            categoryId={category.id}
           />
-        )}
+        ))}
       </main>
     </div>
   );

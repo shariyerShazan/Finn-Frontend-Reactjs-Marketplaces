@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createBrowserRouter } from "react-router-dom";
 import ParentLayout from "../Layouts/ParentLayout";
 import SignUp from "../AuthLayout/SignUp/SignUp";
@@ -49,6 +50,7 @@ import ClassifiedAdPolicy from "@/components/pg/classifiedadpolicy/ClassifiedAdP
 import FraudPrevention from "@/components/FraudPrevention";
 import FAQs from "@/components/FAQs";
 import { useEffect } from "react";
+import AdBoost from "@/main/admin/pages/ad-boost/AdBoost";
 function ErrorBoundary() {
   useEffect(() => {
     window.location.reload();
@@ -60,13 +62,8 @@ function ErrorBoundary() {
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-     
-       
-        <ParentLayout />
-     
-    ),
-    errorElement:<ErrorBoundary/>,
+    element: <ParentLayout />,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         path: "/",
@@ -153,7 +150,7 @@ export const router = createBrowserRouter([
         <UserDashboardLayout />
       </PrivateRoute>
     ),
-    errorElement:<ErrorBoundary/>,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         index: true,
@@ -180,7 +177,7 @@ export const router = createBrowserRouter([
         <AdminDashboardLayout />
       </PrivateRoute>
     ),
-    errorElement:<ErrorBoundary/>,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         index: true,
@@ -230,6 +227,10 @@ export const router = createBrowserRouter([
         path: "subscription",
         element: <Subscription />,
       },
+      {
+        path: "ad-boost",
+        element: <AdBoost />,
+      },
     ],
   },
   {
@@ -238,9 +239,8 @@ export const router = createBrowserRouter([
       <PrivateRoute allowedRoles={["SELLER"]}>
         <SellerDashboardLayout />
       </PrivateRoute>
-      
     ),
-    errorElement:<ErrorBoundary/>,
+    errorElement: <ErrorBoundary />,
     children: [
       {
         index: true,

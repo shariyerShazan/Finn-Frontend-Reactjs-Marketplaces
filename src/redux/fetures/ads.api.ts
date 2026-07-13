@@ -13,7 +13,7 @@ export const adsApi = baseApi.injectEndpoints({
         search?: string;
         isSold?: string;
         sortByPrice?: "asc" | "desc";
-        subCategoryId: string;
+        subCategoryId?: string;
         categoryId?: string;
       }
     >({

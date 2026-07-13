@@ -88,15 +88,26 @@ const ViewAdDialog = ({
                 </span>
               </div>
             </div>
-            <Badge
-              className={`text-sm px-6 py-2 rounded-2xl shadow-sm border-none ${
-                ad.isSold
-                  ? "bg-orange-500 text-white"
-                  : "bg-emerald-500 text-white"
-              }`}
-            >
-              {ad.isSold ? "Sold Out" : "Active Listing"}
-            </Badge>
+            <div className="flex flex-col gap-2">
+              <Badge
+                className={`text-sm px-6 py-2 rounded-2xl shadow-sm border-none ${
+                  ad.isSold
+                    ? "bg-orange-500 text-white"
+                    : "bg-emerald-500 text-white"
+                }`}
+              >
+                {ad.isSold ? "Sold Out" : "Active Listing"}
+              </Badge>
+              {ad.isBoosted && (
+                <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-none px-3 py-1 rounded-lg font-black uppercase tracking-tighter text-[10px] flex items-center gap-1 animate-pulse">
+                  <CheckCircle2
+                    size={10}
+                    className="fill-amber-500 text-white"
+                  />
+                  Premium Boosted
+                </Badge>
+              )}
+            </div>
           </div>
         </DialogHeader>
 
