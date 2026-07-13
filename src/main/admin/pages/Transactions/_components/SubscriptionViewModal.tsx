@@ -22,25 +22,25 @@ interface Props {
 const SubscriptionViewModal = ({ isOpen, onClose, transaction }: Props) => {
   if (!transaction) return null;
 
- const detailItem = (icon: any, label: string, value: string) => (
-   <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100 min-w-0">
-     {" "}
-     <div className="p-2 bg-white rounded-md shadow-sm text-[#0064AE] shrink-0">
-       {" "}
-       {icon}
-     </div>
-     <div className="min-w-0 flex-1">
-       {" "}
-       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-         {label}
-       </p>
-       <p className="text-sm font-bold text-slate-800 break-all leading-tight">
-         {" "}
-         {value}
-       </p>
-     </div>
-   </div>
- );
+  const detailItem = (icon: any, label: string, value: string) => (
+    <div className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100 min-w-0">
+      {" "}
+      <div className="p-2 bg-white rounded-md shadow-sm text-[#0064AE] shrink-0">
+        {" "}
+        {icon}
+      </div>
+      <div className="min-w-0 flex-1">
+        {" "}
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+          {label}
+        </p>
+        <p className="text-sm font-bold text-slate-800 break-all leading-tight">
+          {" "}
+          {value}
+        </p>
+      </div>
+    </div>
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -64,12 +64,12 @@ const SubscriptionViewModal = ({ isOpen, onClose, transaction }: Props) => {
                   Payment Status
                 </p>
                 <p className="text-sm font-bold text-emerald-600">
-                  {transaction.paymentStatus}
+                  {transaction?.paymentStatus}
                 </p>
               </div>
             </div>
             <span className="bg-emerald-600 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">
-              {transaction.status}
+              {transaction?.status}
             </span>
           </div>
 
@@ -77,25 +77,25 @@ const SubscriptionViewModal = ({ isOpen, onClose, transaction }: Props) => {
             {detailItem(
               <User size={18} />,
               "Seller Info",
-              `${transaction.seller.firstName} ${transaction.seller.lastName}`,
+              `${transaction?.seller?.firstName} ${transaction?.seller?.lastName}`,
             )}
 
             {detailItem(
               <CreditCard size={18} />,
               "Transaction ID",
-              transaction.transactionId,
+              transaction?.transactionId,
             )}
 
             <div className="grid grid-cols-2 gap-3">
               {detailItem(
                 <Package size={18} />,
                 "Plan Name",
-                transaction.plan.name,
+                transaction?.plan?.name,
               )}
               {detailItem(
                 <Calendar size={18} />,
                 "Plan Price",
-                `${transaction.plan.price} PLN`,
+                `${transaction?.plan?.price} PLN`,
               )}
             </div>
 
@@ -103,12 +103,12 @@ const SubscriptionViewModal = ({ isOpen, onClose, transaction }: Props) => {
               {detailItem(
                 <Calendar size={18} />,
                 "Start Date",
-                new Date(transaction.startDate).toLocaleDateString(),
+                new Date(transaction?.startDate).toLocaleDateString(),
               )}
               {detailItem(
                 <Calendar size={18} />,
                 "End Date",
-                new Date(transaction.endDate).toLocaleDateString(),
+                new Date(transaction?.endDate).toLocaleDateString(),
               )}
             </div>
           </div>
@@ -119,14 +119,15 @@ const SubscriptionViewModal = ({ isOpen, onClose, transaction }: Props) => {
                 Post Usage
               </p>
               <p className="text-sm font-black text-[#0064AE]">
-                {transaction.usedAdIds.length} / {transaction.totalLimit} Posts
+                {transaction?.usedAdIds?.length} / {transaction?.totalLimit}{" "}
+                Posts
               </p>
             </div>
             <div className="w-16 h-1 bg-blue-100 rounded-full overflow-hidden">
               <div
                 className="h-full bg-[#0064AE]"
                 style={{
-                  width: `${(transaction.usedAdIds.length / transaction.totalLimit) * 100}%`,
+                  width: `${(transaction?.usedAdIds?.length / transaction?.totalLimit) * 100}%`,
                 }}
               />
             </div>

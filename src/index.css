@@ -203,3 +203,34 @@ body > .skiptranslate {
   top: -14px;
   display: none !important;
 }
+
+
+
+
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* যেন ফিল্টার বা নেভবারের নিচে থাকে */
+}
+
+
+@import "leaflet/dist/leaflet.css";
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* কাস্টম পপআপ এর সুন্দর ডিজাইন এর জন্য */
+.custom-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.custom-popup .leaflet-popup-content {
+  margin: 0;
+  width: 260px !important;
+}
+

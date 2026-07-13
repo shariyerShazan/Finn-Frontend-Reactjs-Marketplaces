@@ -180,9 +180,10 @@ export default function CompleteSellerProfile() {
             </div>
 
             <Button
+            translate="no"
               disabled={isLoading}
               type="submit"
-              className="w-full cursor-pointer bg-[#0064AE] hover:bg-[#005494] text-white py-6 text-lg font-semibold rounded-xl mt-4 transition-all"
+              className="w-full notranslate cursor-pointer bg-[#0064AE] hover:bg-[#005494] text-white py-6 text-lg font-semibold rounded-xl mt-4 transition-all"
             >
               {isLoading ? (
                 <Loader2 className="animate-spin mr-2" />

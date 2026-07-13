@@ -115,7 +115,7 @@ export const LanguageDropdown = ({
     <div className="relative">
       <button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="flex items-center bg-black text-white border border-black space-x-2 text-sm px-3 py-2 rounded-md hover:bg-gray-800 transition-colors"
+        className="flex items-center bg-black text-white border border-black space-x-2 text-sm px-3 py-1 cursor-pointer rounded-md hover:bg-gray-800 transition-colors"
         title={ready ? "Change Language" : "Loading translation..."}
         disabled={!ready}
       >

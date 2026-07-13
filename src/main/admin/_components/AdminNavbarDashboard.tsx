@@ -42,7 +42,10 @@ const AdminNavbarDashboard = ({
 
         <div className="flex items-center gap-3 cursor-pointer pl-2">
           <div className="text-right hidden sm:block">
-            <p className="text-xs font-black text-slate-900 leading-none tracking-tight">
+            <p
+              translate="no"
+              className="text-xs notranslate font-black text-slate-900 leading-none tracking-tight"
+            >
               {userData.email}
             </p>
             <p className="text-[10px] font-bold text-[#0064AE] mt-1 uppercase tracking-tighter">
