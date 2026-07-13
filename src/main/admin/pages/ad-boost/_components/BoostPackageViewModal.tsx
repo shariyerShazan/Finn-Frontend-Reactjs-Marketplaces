@@ -1,23 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { CheckCircle2, Calendar, HardDrive } from "lucide-react";
+import { Zap, Calendar, Info, ShieldCheck } from "lucide-react";
 
-const SubscriptionViewModal = ({ isOpen, onClose, plan }: any) => {
-  if (!plan) return null;
+const BoostPackageViewModal = ({ isOpen, onClose, pkg }: any) => {
+  if (!pkg) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[450px] rounded-3xl p-0 overflow-hidden border-none">
-        <div className="bg-[#0064AE] p-8 text-white relative">
+        <div className="bg-gradient-to-br from-[#0064AE] to-[#003d6b] p-8 text-white relative">
           <div className="space-y-1">
-            <p className="text-blue-100 text-xs font-black uppercase tracking-[3px]">
-              Plan Details
+            <p className="text-blue-100 text-[10px] font-black uppercase tracking-[3px]">
+              Package Tier
             </p>
-            <h2 className="text-3xl font-black">{plan?.name}</h2>
+            <h2 className="text-3xl font-black flex items-center gap-2">
+              <Zap className="fill-amber-400 text-amber-400" size={24} />
+              {pkg.name}
+            </h2>
           </div>
           <div className="absolute top-8 right-8 text-4xl font-black opacity-20">
-            ${plan.price}
+            ${pkg.price}
           </div>
         </div>
 
@@ -29,45 +31,39 @@ const SubscriptionViewModal = ({ isOpen, onClose, plan }: any) => {
               </div>
               <div>
                 <p className="text-[10px] font-black text-slate-400 uppercase">
-                  Duration
+                  Validity
                 </p>
                 <p className="text-sm font-bold text-slate-700">
-                  {plan?.durationDays} Days
+                  {pkg.durationDays} Days
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-slate-50 rounded-xl text-slate-400">
-                <HardDrive size={20} />
+                <ShieldCheck size={20} />
               </div>
               <div>
                 <p className="text-[10px] font-black text-slate-400 uppercase">
-                  Post Limit
+                  Level
                 </p>
-                <p className="text-sm font-bold text-slate-700">
-                  {plan?.postLimit} Ads
+                <p className="text-sm font-bold text-slate-700 uppercase">
+                  {pkg.type}
                 </p>
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b pb-2">
-              What's Included
-            </p>
-            <div className="space-y-3">
-              {plan.features.map((feature: string, idx: number) => (
-                <div key={idx} className="flex items-start gap-3">
-                  <CheckCircle2
-                    size={18}
-                    className="text-[#0064AE] mt-0.5 shrink-0"
-                  />
-                  <span className="text-sm font-semibold text-slate-600">
-                    {feature}
-                  </span>
-                </div>
-              ))}
+            <div className="flex items-center gap-2 border-b pb-2">
+              <Info size={14} className="text-slate-400" />
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Package Description
+              </p>
             </div>
+            <p className="text-sm font-semibold text-slate-600 leading-relaxed">
+              {pkg.description ||
+                "No detailed description provided for this boost package."}
+            </p>
           </div>
         </div>
       </DialogContent>
@@ -75,4 +71,4 @@ const SubscriptionViewModal = ({ isOpen, onClose, plan }: any) => {
   );
 };
 
-export default SubscriptionViewModal;
+export default BoostPackageViewModal;

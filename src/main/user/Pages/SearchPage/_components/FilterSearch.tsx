@@ -10,7 +10,9 @@ import {
   FilterIcon,
   Loader2,
 } from "lucide-react";
+
 import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectContent,
@@ -18,8 +20,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { Badge } from "@/components/ui/badge";
+
 import { Separator } from "@/components/ui/separator";
+
 import {
   useGetAllCategoriesQuery,
   useGetSingleCategoryQuery,
@@ -31,7 +34,6 @@ interface FilterProps {
 }
 
 const FilterSearch = ({ filters, setFilters }: FilterProps) => {
-
   const { data: categoriesResponse, isLoading: catLoading } =
     useGetAllCategoriesQuery({ page: 1, limit: 100 });
 
@@ -47,90 +49,96 @@ const FilterSearch = ({ filters, setFilters }: FilterProps) => {
   const handleUpdate = (key: string, value: string) => {
     setFilters((prev: any) => {
       const updated = { ...prev, [key]: value, page: 1 };
-      if (key === "category") updated.subCategory = "all";
+
+      if (key === "category") {
+        updated.subCategory = "all";
+      }
+
       return updated;
     });
   };
 
   return (
-    <div className="sticky top-15 z-50 w-full bg-white/90 backdrop-blur-lg border-b border-slate-100 shadow-sm transition-all duration-300">
-      <div className="mx-auto px-6 py-3">
-        <div className="flex flex-col lg:flex-row lg:items-center gap-6">
-          {/* 🔍 Dynamic Search */}
-          <div className="relative flex-1 group">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-[#0064AE] transition-colors">
-              <Search size={19} strokeWidth={2.5} />
+    <div className="w-full bg-white">
+      <div className="mx-auto px-4 py-4">
+        <div className="flex flex-col  gap-4">
+          {/* Search */}
+          <div className="relative group w-full">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <Search size={18} />
             </div>
+
             <Input
-              placeholder="Search products, services, or locations..."
-              className="pl-10 h-11 border-slate-200 bg-slate-50/50 focus-visible:ring-[#0064AE] focus-visible:ring-offset-0 rounded-xl text-[15px] transition-all hover:bg-white"
+              placeholder="Search ads..."
+              className="pl-10 h-11 rounded-xl"
               value={filters.search}
               onChange={(e) => handleUpdate("search", e.target.value)}
             />
           </div>
 
-          <div className="flex flex-wrap md:flex-nowrap items-center gap-3">
-            <Separator
-              orientation="vertical"
-              className="hidden lg:block h-8 mx-2 bg-slate-200"
-            />
+          <Separator />
 
-            {/* 💰 Sort By Price */}
+          {/* Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            {/* Sort */}
             <Select
               value={filters.sortByPrice}
               onValueChange={(val) => handleUpdate("sortByPrice", val)}
             >
-              <SelectTrigger className="w-[170px] h-11 rounded-xl border-slate-200 bg-white font-medium hover:border-[#0064AE] transition-colors">
+              <SelectTrigger className="h-11 rounded-xl">
                 <div className="flex items-center gap-2">
-                  <ArrowUpNarrowWide size={16} className="text-[#0064AE]" />
-                  <SelectValue placeholder="Sort by price" />
+                  <ArrowUpNarrowWide size={15} />
+                  <SelectValue placeholder="Sort price" />
                 </div>
               </SelectTrigger>
-              <SelectContent className="rounded-xl shadow-2xl border-slate-100">
-                <SelectItem value="asc">Price: Low to High</SelectItem>
-                <SelectItem value="desc">Price: High to Low</SelectItem>
+
+              <SelectContent position="popper" className="z-[9999]">
+                <SelectItem value="asc">Low → High</SelectItem>
+                <SelectItem value="desc">High → Low</SelectItem>
               </SelectContent>
             </Select>
 
-            {/* ✅ Status Filter */}
+            {/* Status */}
             <Select
               value={filters.isSold}
               onValueChange={(val) => handleUpdate("isSold", val)}
             >
-              <SelectTrigger className="w-[150px] h-11 rounded-xl border-slate-200 bg-white font-medium hover:border-[#0064AE] transition-colors">
+              <SelectTrigger className="h-11 rounded-xl">
                 <div className="flex items-center gap-2">
                   {filters.isSold === "true" ? (
-                    <XCircle size={16} className="text-rose-500" />
+                    <XCircle size={15} className="text-red-500" />
                   ) : (
-                    <CheckCircle2 size={16} className="text-emerald-500" />
+                    <CheckCircle2 size={15} className="text-green-500" />
                   )}
                   <SelectValue placeholder="Status" />
                 </div>
               </SelectTrigger>
-              <SelectContent className="rounded-xl shadow-2xl border-slate-100">
+
+              <SelectContent position="popper" className="z-[9999]">
                 <SelectItem value="false">Available</SelectItem>
-                <SelectItem value="true">Sold Out</SelectItem>
+                <SelectItem value="true">Sold</SelectItem>
               </SelectContent>
             </Select>
 
-            {/* 📂 Category Select */}
+            {/* Category */}
             <Select
               value={filters.category}
               onValueChange={(val) => handleUpdate("category", val)}
             >
-              <SelectTrigger className="w-[170px] h-11 rounded-xl border-slate-200 bg-white font-medium hover:border-[#0064AE] transition-colors">
+              <SelectTrigger className="h-11 rounded-xl">
                 <div className="flex items-center gap-2">
                   {catLoading ? (
                     <Loader2 size={14} className="animate-spin" />
                   ) : (
-                    <Layers size={16} className="text-slate-500" />
+                    <Layers size={16} />
                   )}
                   <SelectValue placeholder="Category" />
                 </div>
               </SelectTrigger>
-              <SelectContent className="rounded-xl shadow-2xl border-slate-100">
+
+              <SelectContent position="popper" className="z-[9999]">
                 <SelectItem value="all">All Categories</SelectItem>
-                {/* এখানে allCategories এখন নিরাপদ অ্যারে */}
+
                 {allCategories.map((c: any) => (
                   <SelectItem key={c.id} value={c.id}>
                     {c.name}
@@ -139,37 +147,37 @@ const FilterSearch = ({ filters, setFilters }: FilterProps) => {
               </SelectContent>
             </Select>
 
-            {/* 🏷️ Sub-Category Select */}
-            <div className="relative">
-              <Select
-                value={filters.subCategory}
-                onValueChange={(val) => handleUpdate("subCategory", val)}
-                disabled={
-                  !filters.category ||
-                  filters.category === "all" ||
-                  subCategories.length === 0
-                }
-              >
-                <SelectTrigger className="w-[180px] h-11 rounded-xl border-slate-200 bg-white font-medium hover:border-[#0064AE] transition-colors disabled:opacity-50">
-                  <div className="flex items-center gap-2">
-                    {subCatLoading ? (
-                      <Loader2 size={14} className="animate-spin" />
-                    ) : (
-                      <FilterIcon size={14} className="text-slate-400" />
-                    )}
-                    <SelectValue placeholder="Sub-Category" />
-                  </div>
-                </SelectTrigger>
-                <SelectContent className="rounded-xl shadow-2xl border-slate-100">
-                  <SelectItem value="all">All Types</SelectItem>
-                  {subCategories.map((s: any) => (
-                    <SelectItem key={s.id} value={s.id}>
-                      {s.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {/* Sub Category */}
+            <Select
+              value={filters.subCategory}
+              onValueChange={(val) => handleUpdate("subCategory", val)}
+              disabled={
+                !filters.category ||
+                filters.category === "all" ||
+                subCategories.length === 0
+              }
+            >
+              <SelectTrigger className="h-11 rounded-xl">
+                <div className="flex items-center gap-2">
+                  {subCatLoading ? (
+                    <Loader2 size={14} className="animate-spin" />
+                  ) : (
+                    <FilterIcon size={14} />
+                  )}
+                  <SelectValue placeholder="Sub category" />
+                </div>
+              </SelectTrigger>
+
+              <SelectContent position="popper" className="z-[9999]">
+                <SelectItem value="all">All Types</SelectItem>
+
+                {subCategories.map((s: any) => (
+                  <SelectItem key={s.id} value={s.id}>
+                    {s.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

@@ -15,6 +15,7 @@ import { LuGitPullRequestArrow } from "react-icons/lu";
 import { IoPaperPlaneOutline } from "react-icons/io5";
 import { useLogoutMutation } from "@/redux/fetures/auth.api";
 import { toast } from "react-toastify";
+import { RiPlanetLine } from "react-icons/ri";
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -80,6 +81,11 @@ const AdminSidebarDashboard = ({
       name: "Subscription",
       icon: IoPaperPlaneOutline,
       path: "/admin/dashboard/subscription",
+    },
+    {
+      name: "Boost Ads Plan",
+      path: "ad-boost",
+      icon: RiPlanetLine,
     },
   ];
 
